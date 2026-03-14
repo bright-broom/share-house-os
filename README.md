@@ -1,159 +1,97 @@
-# Turborepo starter
+# Share House OS (EnShare)
 
-This Turborepo starter is maintained by the Turborepo core team.
+「ちょうどいい距離感の暮らしと信用をデザインする」
+シェアハウスの入居から退去、日々の自治、そして次の住み替えまでをシームレスに繋ぐ、次世代のシェアハウス統合プラットフォーム（SaaS + Marketplace）です。
 
-## Using this example
+## 📖 Project Overview
 
-Run the following command:
+本リポジトリは、Share House OSを構成する4つのプロダクトを統合管理する **Turborepo (Monorepo)** です。
+詳細なビジネスロジックや各プロダクトの要件定義については、[`/docs`](./docs) ディレクトリのMarkdown資料を参照してください。
 
-```sh
-npx create-turbo@latest
-```
+1. **Core OS**: 統合データベース・Stripe決済基盤・信用スコアエンジン
+2. **Resident App**: 住民向け生活・自治アプリ (Mobile)
+3. **Owner Console**: オーナー向け業務自動化SaaS (Web)
+4. **Acquisition Portal**: 集客・市場向けポータル (Web)
 
-## What's inside?
+## 🏗️ Architecture & Tech Stack
 
-This Turborepo includes the following packages/apps:
+* **Package Manager:** `pnpm` (推奨)
+* **Monorepo Tool:** Turborepo
+* **Frontend (Web):** Next.js 16 (App Router), React, Tailwind CSS, shadcn/ui
+* **Frontend (Mobile):** Expo (React Native), NativeWind
+* **Backend & Database:** Supabase (PostgreSQL, Auth, Edge Functions, Storage, Realtime)
+* **Payments:** Stripe Connect
 
-### Apps and Packages
+## 📂 Directory Structure
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+\`\`\`text
+share-house-os/
+├── apps/
+│   ├── resident-app/      # 📱 住民向けモバイルアプリ (Expo)
+│   ├── owner-console/     # 💻 オーナー向け管理SaaS (Next.js)
+│   └── public-portal/     # 🌐 集客・スカウトポータル (Next.js)
+├── packages/
+│   ├── core-db/           # 🗄️ Supabase連携・自動生成型定義
+│   ├── ui-system/         # 🎨 共通UIコンポーネント (shadcn/ui)
+│   ├── eslint-config/     # 🧹 共通Lint設定
+│   └── typescript-config/ # 📝 共通TS設定
+└── docs/                  # 💡 要件定義書・システムアーキテクチャ図
+\`\`\`
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+## 🚀 Getting Started
 
-### Utilities
+ローカル開発環境のセットアップ手順です。
 
-This Turborepo has some additional tools already setup for you:
+### Prerequisites
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+* Node.js (v20+)
+* pnpm (v8+)
+* [Supabase CLI](https://supabase.com/docs/guides/cli)
+* Expo CLI
 
-### Build
+### Installation
 
-To build all apps and packages, run the following command:
+1. リポジトリをクローンします。
+   \`\`\`bash
+   git clone https://github.com/KoenigWolf/share-house-os.git
+   cd share-house-os
+   \`\`\`
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+2. 依存関係をインストールします。
+   \`\`\`bash
+   pnpm install
+   \`\`\`
 
-```sh
-cd my-turborepo
-turbo build
-```
+3. 環境変数を設定します。
+   各 `apps/*` ディレクトリの `.env.example` を `.env.local` にコピーし、SupabaseおよびStripeのローカルキーを設定してください。
 
-Without global `turbo`, use your package manager:
+### Running Development Servers
 
-```sh
-cd my-turborepo
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
+Turborepoを使用して、すべてのアプリケーションを同時に起動します。
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+\`\`\`bash
+pnpm run dev
+\`\`\`
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+* Owner Console: http://localhost:3000
+* Acquisition Portal: http://localhost:3001
+* Resident App: Expo GoアプリでQRコードをスキャンして起動
 
-```sh
-turbo build --filter=docs
-```
+特定のアプリのみを起動する場合はフィルターを使用します。
+\`\`\`bash
+pnpm run dev --filter=owner-console
+\`\`\`
 
-Without global `turbo`:
+## 📚 Documentation (Docs-as-Code)
 
-```sh
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+本プロジェクトは Docs-as-Code のアプローチを採用しています。開発を進める前に、以下のドキュメントを必ず確認してください。
 
-### Develop
+* [01. Core OS (プラットフォーム基盤) 定義書](./docs/01_core_os_requirements.md)
+* [02. Resident App (住民向けアプリ) 定義書](./docs/02_resident_app.md)
+* [03. Owner Console (オーナー向けSaaS) 定義書](./docs/03_owner_console.md)
+* [04. Acquisition Portal (集客ポータル) 定義書](./docs/04_acquisition_portal.md)
 
-To develop all apps and packages, run the following command:
+## 🔒 Security & RLS
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo dev --filter=web
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+データベースへのアクセスはすべて Supabase の Row Level Security (RLS) を経由します。
+ローカルでのDBマイグレーションやRLSのテストについては、`/packages/core-db/README.md` を参照してください。
